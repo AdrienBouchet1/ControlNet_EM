@@ -1,4 +1,4 @@
-name: control
+name: controlNet_EM
 channels:
   - pytorch
   - defaults
