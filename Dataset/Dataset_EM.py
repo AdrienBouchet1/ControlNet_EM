@@ -6,7 +6,7 @@ from PIL import Image
 from torch.utils.data import Dataset
 
 
-class MyDataset(Dataset):
+class MyDataset_EM(Dataset):
     def __init__(self,input_folder):
 
 
@@ -33,7 +33,7 @@ class MyDataset(Dataset):
         self.data={}
         for cat in self.__get_categories(): 
 
-                self.__get_files(os.path.join(self.input_folder,int(cat)))
+                self.__get_files(os.path.join(self.input_folder,str(cat)),cat)
 
 
 
@@ -64,7 +64,7 @@ class MyDataset(Dataset):
                  
                  pass
 
-        print("les catégories reconnues sont : \n __________________________________________________________________________________________ \n {}".format(available_cat))
+        print("les catégories reconnues sont : \n ____________________________________________________________________________ \n {}".format(available_cat))
         
         return available_cat
     
@@ -80,7 +80,7 @@ class MyDataset(Dataset):
               if file.endswith(".tif") : 
                 image=Image.open(os.path.join(path,file))
                 image=np.array(image)
-                mask=np.full(shape=image.shape, fill_valu=cat)
+                mask=np.full(shape=(*image.shape,3), fill_value=cat)
                 image=np.stack([image] * 3, axis=0) ### Pour l'avoir sur 3 channels
 
                 self.data[len(list(self.data.keys()))]={"image" : image, "mask" : mask}
@@ -98,47 +98,23 @@ class MyDataset(Dataset):
          
 
         source = self.data[idx]["mask"].astype(np.float32)
-        target = (self.data[idx]["Image"].astype(np.float32) / 127.5) - 1.0
+        #source=np.expand_dims(source, axis=2)
+
+
+        target = (self.data[idx]["image"].astype(np.float32) / 127.5) - 1.0
+        target=np.transpose(target, (1, 2, 0))
 
 
         return dict(jpg=target, txt="", hint=source)    
             
-    def __getitem__(self,idx) : 
-         
-
-        source = self.data[idx]["mask"].astype(np.float32)
-        target = (self.data[idx]["Image"].astype(np.float32) / 127.5) - 1.0
 
 
-        return dict(jpg=target, txt="", hint=source)    
-            
-    #     self.data = []
-    #     with open('./training/fill50k/prompt.json', 'rt') as f:
-    #         for line in f:
-    #             self.data.append(json.loads(line))
 
-    # def __len__(self):
-    #     return len(self.data)
 
-    # def __getitem__(self, idx):
-    #     item = self.data[idx]
+if __name__=="__main__": 
+    
+    dataset=MyDataset_EM(input_folder="/home/adrienb/Documents/Data/dataset_2_ControlNet_256_256/patches")
+    print("la longueur : {}".format(len(dataset)))
 
-    #     source_filename = item['source']
-    #     target_filename = item['target']
-    #     prompt = item['prompt']
-
-    #     source = cv2.imread('./training/fill50k/' + source_filename)
-    #     target = cv2.imread('./training/fill50k/' + target_filename)
-
-    #     # Do not forget that OpenCV read images in BGR order.
-    #     source = cv2.cvtColor(source, cv2.COLOR_BGR2RGB)
-    #     target = cv2.cvtColor(target, cv2.COLOR_BGR2RGB)
-
-    #     # Normalize source images to [0, 1].
-    #     source = source.astype(np.float32) / 255.0
-
-    #     # Normalize target images to [-1, 1].
-    #     target = (target.astype(np.float32) / 127.5) - 1.0
-
-    #     return dict(jpg=target, txt=prompt, hint=source)
-
+    a=next(iter(dataset))
+    print("prochain élément txt : {}, jpg : {}, carte : {}".format(a["txt"],a["jpg"].shape,a["hint"].shape))
