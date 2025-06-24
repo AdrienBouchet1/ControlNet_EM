@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 from tutorial_dataset import MyDataset
 from cldm.logger import ImageLogger
 from cldm.model import create_model, load_state_dict
-from Dataset.Dataset_EM import MyDataset_EM
+from Dataset.Dataset_EM import MyDataset_EM,MyDataset_EM_format_2
 from pytorch_lightning.loggers import CSVLogger
 
 # Configs
@@ -26,12 +26,14 @@ model.only_mid_control = only_mid_control
 
 
 input_folder="/home/adrienb/Documents/Data/dataset_2_ControlNet_256_256/patches"
+intput_folder_format_2="/home/adrienb/Documents/Data/DataSet_256_256_classif_128_128_format_2/raw"
 # Misc
-dataset = MyDataset_EM(input_folder=input_folder)
+#dataset = MyDataset_EM(input_folder=input_folder)
+dataset = MyDataset_EM_format_2(input_folder=intput_folder_format_2)
 print("dataset loaded correctly.")
 dataloader = DataLoader(dataset, num_workers=0, batch_size=batch_size, shuffle=True)
 logger = ImageLogger(batch_frequency=logger_freq)
-trainer = pl.Trainer(gpus=1, precision=32,max_epochs=5,logger=CSVLogger("logs", name="controlnet_run"), callbacks=[logger])
+trainer = pl.Trainer(gpus=1, precision=32,max_epochs=1000,logger=CSVLogger("logs", name="controlnet_run"), callbacks=[logger])
 
 print("starting training...")
 # Train!
