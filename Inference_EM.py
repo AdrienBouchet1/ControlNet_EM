@@ -138,6 +138,7 @@ class InferenceEM :
         plt.axis('off')  # optionnel : cache les axes
         plt.show() 
         result = Image.fromarray(decoded.astype(np.uint8))
+        return result
 
           
 
@@ -150,30 +151,31 @@ class InferenceEM :
 if __name__=='__main__' : 
 
 
+    
 
-    # ckpt_path="/home/adrienb/Documents/ControlNet_EM/logs/controlnet_run/version_0/checkpoints/epoch=999-step=78999.ckpt"
-    # #ckpt_path='./models/control_sd15_ini.ckpt'
-    # assert os.path.exists(ckpt_path),"non reconnu"
+    ckpt_path="/home/adrienb/Documents/ControlNet_EM/Run_1_pretrained/logs/controlnet_run/version_0/checkpoints/epoch=999-step=78999.ckpt"
+    #ckpt_path='./models/control_sd15_ini.ckpt'
+    assert os.path.exists(ckpt_path),"non reconnu"
 
-    # IEM=InferenceEM(checkpoint_path=ckpt_path)
-
-
-
-    # mat=np.full((512,512),fill_value=2)
-    # #mat[:,256:]=6
-    # #mat[:256,:]=6
-    # print(mat)
-    # IEM.generate(mat)
-    # IEM.generate(mat)
-    # IEM.generate(mat)
-    # IEM.generate(mat)
+    IEM=InferenceEM(checkpoint_path=ckpt_path)
 
 
-    # # IEM.generate(np.full((512,512),fill_value=8,dtype=np.uint8))
-    # # IEM.generate(np.full((512,512),fill_value=8,dtype=np.uint8))
-    # # IEM.generate(np.full((512,512),fill_value=4,dtype=np.uint8))
-    # # IEM.generate(np.full((512,512),fill_value=4,dtype=np.uint8))
-    # # IEM.generate(np.full((512,512),fill_value=4,dtype=np.uint8))
-    # # IEM.generate(np.full((512,512),fill_value=6,dtype=np.uint8))
-    # # IEM.generate(np.full((512,512),fill_value=6,dtype=np.uint8))
-    # # IEM.generate(np.full((512,512),fill_value=6,dtype=np.uint8))
+
+    mat=np.full((512,512),fill_value=2)
+    mat[:,256:]=6
+    #mat[:256,:]=6
+    print(mat)
+    IEM.generate(mat)
+    IEM.generate(mat)
+    IEM.generate(mat)
+    IEM.generate(mat)
+
+
+    # IEM.generate(np.full((512,512),fill_value=8,dtype=np.uint8))
+    # IEM.generate(np.full((512,512),fill_value=8,dtype=np.uint8))
+    # IEM.generate(np.full((512,512),fill_value=4,dtype=np.uint8))
+    # IEM.generate(np.full((512,512),fill_value=4,dtype=np.uint8))
+    # IEM.generate(np.full((512,512),fill_value=4,dtype=np.uint8))
+    # IEM.generate(np.full((512,512),fill_value=6,dtype=np.uint8))
+    # IEM.generate(np.full((512,512),fill_value=6,dtype=np.uint8))
+    # IEM.generate(np.full((512,512),fill_value=6,dtype=np.uint8))
